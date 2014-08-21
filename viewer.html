@@ -14,6 +14,8 @@
 
 			socket.on('move', function(msg){
 				console.log('move: ' + msg.direction + 'from userid: ' + msg.userid);
+
+				var mario = marios[msg.userid];
 				if (msg.direction === 'up') 
 				{
 					mario.y -= 30;
@@ -33,17 +35,21 @@
 			});
 
 			socket.on('addMario', function(userid){
-				addMario();
+				addMario(userid);
 			});
 
 
 			var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create: create, update: update, render: render});
+
+			var marios = [];
+
 
 			function preload() {
 				game.load.image('mario', 'assets/mario.png');
 			}
 
 			function create() {
+
 			}
 
 			function update() {
@@ -52,11 +58,13 @@
 			function render() {
 			}
 
-			function addMario() {
+			function addMario(userid) {
 				var x = Math.floor(Math.random() * 700);
 				var y = Math.floor(Math.random() * 500);
 				var mario = game.add.sprite(x, y, 'mario');
 				mario.anchor.setTo(0.5, 0.5);
+
+				marios[userid] = mario;
 			}
 		};
 
