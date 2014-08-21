@@ -8,65 +8,70 @@
 <body>
 	<script type="text/javascript">
 
-		window.onload = function() {
-			var socket = io();
-			socket.emit('identify', 'viewer');
+	window.onload = function() {
+		var socket = io();
+		socket.emit('identify', 'viewer');
 
-			socket.on('move', function(msg){
-				console.log('move: ' + msg.direction + 'from userid: ' + msg.userid);
+		socket.on('move', function(msg){
+			console.log('move: ' + msg.direction + 'from userid: ' + msg.userid);
 
-				var mario = marios[msg.userid];
-				if (msg.direction === 'up') 
-				{
-					mario.y -= 30;
-				}
-				if (msg.direction === 'down') 
-				{
-					mario.y += 30;
-				}
-				if (msg.direction === 'left') 
-				{
-					mario.x -= 30;
-				}
-				if (msg.direction === 'right') 
-				{
-					mario.x += 30;
-				}
-			});
-
-			socket.on('addMario', function(userid){
-				addMario(userid);
-			});
-
-
-			var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create: create, update: update, render: render});
-
-			var marios = [];
-
-
-			function preload() {
-				game.load.image('mario', 'assets/mario.png');
+			var mario = marios[msg.userid];
+			if (msg.direction === 'up') 
+			{
+				mario.y -= 30;
 			}
-
-			function create() {
-
+			if (msg.direction === 'down') 
+			{
+				mario.y += 30;
 			}
-
-			function update() {
+			if (msg.direction === 'left') 
+			{
+				mario.x -= 30;
 			}
-
-			function render() {
+			if (msg.direction === 'right') 
+			{
+				mario.x += 30;
 			}
+		});
 
-			function addMario(userid) {
-				var x = Math.floor(Math.random() * 700);
-				var y = Math.floor(Math.random() * 500);
-				var mario = game.add.sprite(x, y, 'mario');
-				mario.anchor.setTo(0.5, 0.5);
+		socket.on('addMario', function(userid){
+			addMario(userid);
+		});
 
-				marios[userid] = mario;
-			}
-		};
+		socket.on('destroyMario', function(userid){
+			var mario = marios[userid];
+			mario.destroy();
+		});
+
+
+		var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create: create, update: update, render: render});
+
+		var marios = [];
+
+
+		function preload() {
+			game.load.image('mario', 'assets/mario.png');
+		}
+
+		function create() {
+
+		}
+
+		function update() {
+		}
+
+		function render() {
+		}
+
+		function addMario(userid) {
+			var x = Math.floor(Math.random() * 700);
+			var y = Math.floor(Math.random() * 500);
+			var mario = game.add.sprite(x, y, 'mario');
+			mario.anchor.setTo(0.5, 0.5);
+
+			marios[userid] = mario;
+		}
+	};
 
 	</script>
 </body>

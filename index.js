@@ -30,6 +30,7 @@ io.on('connection', function(socket){
 
 			this.on('disconnect', function(){
 				console.log('controller disconnected. userid: ' + this.userid);
+				io.emit('destroyMario', this.userid);
 			});
 
 			this.on('move', function(msg){
