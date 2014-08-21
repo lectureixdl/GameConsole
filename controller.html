@@ -10,6 +10,8 @@
 
 		window.onload = function() {
 			var socket = io();
+			socket.emit('identify', 'controller');
+
 
 			var game = new Phaser.Game(300, 300, Phaser.AUTO, '', {preload: preload, create: create, update: update, render: render});
 
@@ -38,16 +40,24 @@
 			}
 
 			function actionUp() {
-				socket.emit('move', 'up');
+				var msg = {};
+				msg.direction = 'up';
+				socket.emit('move', msg);
 			}
 			function actionLeft() {
-				socket.emit('move', 'left');
+				var msg = {};
+				msg.direction = 'left';
+				socket.emit('move', msg);
 			}
 			function actionRight() {
-				socket.emit('move', 'right');
+				var msg = {};
+				msg.direction = 'right';
+				socket.emit('move', msg);
 			}
 			function actionDown() {
-				socket.emit('move', 'down');
+				var msg = {};
+				msg.direction = 'down';
+				socket.emit('move', msg);
 			}
 		};
 

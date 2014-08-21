@@ -10,43 +10,53 @@
 
 		window.onload = function() {
 			var socket = io();
+			socket.emit('identify', 'viewer');
+
 			socket.on('move', function(msg){
-				console.log('move: ' + msg);
-				if (msg === 'up') 
+				console.log('move: ' + msg.direction + 'from userid: ' + msg.userid);
+				if (msg.direction === 'up') 
 				{
 					mario.y -= 30;
 				}
-				if (msg === 'down') 
+				if (msg.direction === 'down') 
 				{
 					mario.y += 30;
 				}
-				if (msg === 'left') 
+				if (msg.direction === 'left') 
 				{
 					mario.x -= 30;
 				}
-				if (msg === 'right') 
+				if (msg.direction === 'right') 
 				{
 					mario.x += 30;
 				}
 			});
 
-			var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create: create, update: update, render: render});
+			socket.on('addMario', function(userid){
+				addMario();
+			});
 
-			var mario;
+
+			var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {preload: preload, create: create, update: update, render: render});
 
 			function preload() {
 				game.load.image('mario', 'assets/mario.png');
 			}
 
 			function create() {
-				mario = game.add.sprite(300, 200, 'mario');
-				mario.anchor.setTo(0.5, 0.5);
 			}
 
 			function update() {
 			}
 
 			function render() {
+			}
+
+			function addMario() {
+				var x = Math.floor(Math.random() * 700);
+				var y = Math.floor(Math.random() * 500);
+				var mario = game.add.sprite(x, y, 'mario');
+				mario.anchor.setTo(0.5, 0.5);
 			}
 		};
 

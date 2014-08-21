@@ -3,19 +3,50 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var userid = 0;
+
 app.use(express.static(__dirname));
 
 io.on('connection', function(socket){
-	console.log('a user connected');
 
-	socket.on('disconnect', function(){
-		console.log('user disconnected');
+	socket.on('identify', function(msg) {
+		if (msg === 'viewer')
+		{
+			console.log('a viewer connected.');
+
+			this.on('disconnect', function(){
+				console.log('viewer disconnected.');
+			});
+
+		} 
+		else if (msg === 'controller')
+		{
+			userid = userid + 1;
+			console.log('a controller connected. userid: ' + userid);
+
+			this.userid = userid;
+
+			io.emit('addMario', this.userid);
+
+			this.on('disconnect', function(){
+				console.log('controller disconnected. userid: ' + this.userid);
+			});
+
+			this.on('move', function(msg){
+				console.log('move: ' + msg.direction + ', userid: ' + this.userid);
+				
+				msg.userid = this.userid;
+
+				io.emit('move', msg);
+			});
+
+
+		}
 	});
 
-	socket.on('move', function(msg){
-		console.log('move: ' + msg);
-		io.emit('move', msg);
-	});
+
+
+
 
 });
 
